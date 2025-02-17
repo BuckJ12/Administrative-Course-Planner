@@ -97,6 +97,7 @@ for course, num_sections in sections_per_course.items():
                       for r, room in enumerate(rooms)
                       if (course, sec, prof, allowed_day, t, r) in schedule) == 1)
         
+#Constraint: Time penalty
 total_time_penalty = model.NewIntVar(0, sum([max(time_slot_penalty.values())] * len(schedule)), "total_time_penalty")
 model.Add(total_time_penalty == sum(
     schedule[(course, sec, prof, allowed_day, t, r)] * time_slot_penalty[time_slots[allowed_day][t]]
