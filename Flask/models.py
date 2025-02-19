@@ -1,5 +1,6 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
 
@@ -56,3 +57,14 @@ class CourseEnrollmentLimit(db.Model):
     __tablename__ = 'Course_Enrollment_Limits'
     course_id = db.Column(db.Integer, db.ForeignKey('Courses.course_id', ondelete='CASCADE'), primary_key=True)
     max_students = db.Column(db.Integer, nullable=False)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    permission = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, username, password, permission):
+        self.username = username
+        self.password = generate_password_hash(password)
+        self.permission = permission

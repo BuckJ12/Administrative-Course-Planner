@@ -1,19 +1,24 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from models import Course, Professor, CourseProfessor, db
 
 courses_blueprint = Blueprint('courses', __name__)
 
 @courses_blueprint.route('/courses', methods=['GET'])
+@jwt_required()
 def get_courses():
     """
-    Returns all the professors
-    Output Json
-    {
-        "course_id": 1,
-        "course_name": Mr Smith,
-        "credit_hours": 1,
-        "meeting_days": 'MWF' 
-    }
+    Returns all courses
+    Output JSON:
+    [
+        {
+            "course_id": 1,
+            "course_name": "Mr Smith",
+            "credit_hours": 1,
+            "meeting_days": "MWF" 
+        },
+        ...
+    ]
     """
     courses = Course.query.all()
     data = [{
@@ -25,15 +30,16 @@ def get_courses():
     return jsonify(data)
 
 @courses_blueprint.route('/courses', methods=['POST'])
+@jwt_required()
 def add_course():
     """
-        Adds a new Course
-        Expected Json
-        {
-            "course_name": Mr Smith,
-            "credit_hours": 1,
-            "meeting_days": 'MWF'
-        }
+    Adds a new Course.
+    Expected JSON:
+    {
+        "course_name": "Mr Smith",
+        "credit_hours": 1,
+        "meeting_days": "MWF"
+    }
     """
     data = request.json
     new_course = Course(
@@ -46,10 +52,11 @@ def add_course():
     return jsonify({'message': 'Course added successfully'}), 201
 
 @courses_blueprint.route('/courses/<int:course_id>', methods=['DELETE'])
+@jwt_required()
 def delete_course_by_id(course_id):
     """
-        Deletes Course by ID.
-        Id is stored in HTTP string
+    Deletes Course by ID.
+    The course_id is provided in the URL.
     """
     course = Course.query.get(course_id)
     if not course:
@@ -59,10 +66,11 @@ def delete_course_by_id(course_id):
     return jsonify({'message': 'Course deleted successfully'})
 
 @courses_blueprint.route('/courses/delete_by_name/<string:course_name>', methods=['DELETE'])
+@jwt_required()
 def delete_course_by_name(course_name):
     """
-        Deletes Course by Name.
-        Name is stored in HTTP string
+    Deletes Course by Name.
+    The course name is provided in the URL.
     """
     course = Course.query.filter_by(course_name=course_name).first()
     if not course:
@@ -72,6 +80,7 @@ def delete_course_by_name(course_name):
     return jsonify({'message': 'Course deleted successfully'})
 
 @courses_blueprint.route('/courses/add_professors', methods=['POST'])
+@jwt_required()
 def add_professors_to_course():
     """
     Assigns multiple professors to a course.
@@ -120,6 +129,7 @@ def add_professors_to_course():
     }), 201
 
 @courses_blueprint.route('/courses/remove_professors', methods=['DELETE'])
+@jwt_required()
 def remove_professors_from_course():
     """
     Removes multiple professors from a course.
