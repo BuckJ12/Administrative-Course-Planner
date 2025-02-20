@@ -13,7 +13,7 @@ def get_courses():
     [
         {
             "course_id": 1,
-            "course_name": "Mr Smith",
+            "course_name": "Science",
             "credit_hours": 1,
             "meeting_days": "MWF" 
         },

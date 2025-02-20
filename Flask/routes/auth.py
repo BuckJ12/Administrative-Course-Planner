@@ -33,7 +33,7 @@ def login():
         return jsonify({"error": "Invalid credentials"}), 401
 
     # Create a new access token (optionally include additional claims)
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"access_token": access_token}), 200
 
 @auth_blueprint.route('/signup', methods=['POST'])
@@ -163,3 +163,28 @@ def update_user_permission(user_id):
     db.session.commit()
 
     return jsonify({"message": "User permission updated successfully"}), 200
+
+@auth_blueprint.route('/validate-token', methods=['GET'])
+@jwt_required()
+def validate_token():
+    """
+    Validates a JWT access token, retrieves the user from the database,
+    and returns the user's identity along with their permission level.
+
+    Returns:
+        JSON response indicating whether the token is valid and the user's details.
+    """
+    current_user_id = get_jwt_identity()
+
+    # Query the database for the user
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify({
+        "message": "Token is valid",
+        "user_id": user.id,
+        "username": user.username,
+        "permission": user.permission
+    }), 200

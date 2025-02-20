@@ -10,16 +10,17 @@ from routes.time_slots import time_slots_blueprint
 from routes.sections import sections_blueprint
 from routes.scheduler import scheduler_blueprint
 from routes.auth import auth_blueprint
+from flask_cors import CORS
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
-    app.config['JWT_SECRET_KEY'] = ''  # Use a strong, unique key
+    app.config['JWT_SECRET_KEY'] = 'stableOFFERBITCOIN12357192'  # Use a strong, unique key
     jwt = JWTManager(app)
 
-    
+    CORS(app, resources={r"/*": {"origins": "http://localhost:5050"}})
     # Create the database tables if they don't exist.
     with app.app_context():
         db.create_all()
