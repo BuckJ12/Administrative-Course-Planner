@@ -9,18 +9,38 @@ def get_rooms():
     Returns all the Rooms
     Output Json
     {
-        "room_id": 1,
-        "room_name": Mr Smith,
+        "id": 1,
+        "name": Mr Smith,
         "capacity": 1
     }
     """
     rooms = Room.query.all()
     data = [{
-        'room_id': room.room_id,
-        'room_name': room.room_name,
+        'id': room.id,
+        'name': room.name,
         'capacity': room.capacity
     } for room in rooms]
     return jsonify(data)
+
+@rooms_blueprint.route('/rooms/<int:room_id>', methods=['GET'])
+def get_room_by_id(room_id):
+    """
+    Returns a Room by ID
+    Output Json
+    {
+        "id": 1,
+        "name": Mr Smith,
+        "capacity": 1
+    }
+    """
+    room = Room.query.get(room_id)
+    if not room:
+        return jsonify({'error': 'Room not found'}), 404
+    return jsonify({
+        'id': room.id,
+        'name': room.name,
+        'capacity': room.capacity
+    })
 
 @rooms_blueprint.route('/rooms', methods=['POST'])
 def add_room():
@@ -28,7 +48,7 @@ def add_room():
         Adds a new Room
         Expected Json
         {
-            "room_name": Mr Smith,
+            "room_name": Lab 103,
             "capacity": 1
         }
     """
@@ -48,19 +68,6 @@ def delete_room_by_id(room_id):
         Id is stored in HTTP string
     """
     room = Room.query.get(room_id)
-    if not room:
-        return jsonify({'error': 'Room not found'}), 404
-    db.session.delete(room)
-    db.session.commit()
-    return jsonify({'message': 'Room deleted successfully'})
-
-@rooms_blueprint.route('/rooms/delete_by_name/<string:room_name>', methods=['DELETE'])
-def delete_room_by_name(room_name):
-    """
-        Deletes Room by Name.
-        Name is stored in HTTP string
-    """
-    room = Room.query.filter_by(room_name=room_name).first()
     if not room:
         return jsonify({'error': 'Room not found'}), 404
     db.session.delete(room)

@@ -2,6 +2,6 @@
   "scripts": {
     "start": "concurrently -n \"React,Flask\" -c \"blue,green\" \"npm run frontend\" \"npm run backend\"",
     "frontend": "cd Client && npm run dev",
-    "backend": "cd Flask && python app.py"
+    "backend": "cd Flask && .\\venv\\Scripts\\python app.py"
   }
 }

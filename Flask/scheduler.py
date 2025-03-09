@@ -1,6 +1,6 @@
 # scheduler.py
 from ortools.sat.python import cp_model
-from models import Course, Professor, CourseProfessor, Room, RoomRestriction, TimeSlot, Section, CourseEnrollmentLimit
+from models import Course, Professor, CourseProfessor, Room, RoomRestriction, TimeSlot
 
 def consecutive_penalty(n):
     return (n * (n + 1)) // 2
@@ -16,8 +16,8 @@ def generate_schedule(db_session):
     rooms = Room.query.all()
     room_restrictions = RoomRestriction.query.all()
     time_slots = TimeSlot.query.all()
-    sections = Section.query.all()
-    enrollment_limits = CourseEnrollmentLimit.query.all()
+    sections = courses.copy()
+    #enrollment_limits = CourseEnrollmentLimit.query.all()
 
     # Build convenient mappings (by id)
     courses_dict = {c.course_id: c for c in courses}
@@ -35,7 +35,7 @@ def generate_schedule(db_session):
         room_restrictions_map.setdefault(rr.course_id, []).append(rr.room_id)
 
     # Map course_id to max number of students
-    enrollment_limits_map = {cel.course_id: cel.max_students for cel in enrollment_limits}
+    #enrollment_limits_map = {cel.course_id: cel.max_students for cel in enrollment_limits}
 
     # Map meeting_days (MWF, TTh) to list of time slots
     time_slots_by_day = {}
@@ -104,9 +104,9 @@ def generate_schedule(db_session):
     # Room capacity constraint:
     for key, var in schedule_vars.items():
         course_id = key[1]
-        max_students = enrollment_limits_map.get(course_id, 0)
+        #max_students = enrollment_limits_map.get(course_id, 0)
         room_cap = rooms_dict[key[5]].capacity
-        model.Add(var * max_students <= room_cap)
+        #model.Add(var * max_students <= room_cap)
 
     # Track professor workload
     prof_workload = {}

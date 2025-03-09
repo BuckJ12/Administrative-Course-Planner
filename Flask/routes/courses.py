@@ -1,52 +1,125 @@
 from flask import Blueprint, jsonify, request
-from models import Course, Professor, CourseProfessor, db
+from models import Course, Professor, CourseProfessor, Section, db
 
 courses_blueprint = Blueprint('courses', __name__)
 
 @courses_blueprint.route('/courses', methods=['GET'])
 def get_courses():
     """
-    Returns all courses
+    Returns all courses with their number of sections and associated professors.
     Output JSON:
     [
         {
-            "course_id": 1,
-            "course_name": "Science",
+            "id": 1,
+            "name": "Science",
             "credit_hours": 1,
-            "meeting_days": "MWF" 
+            "meeting_days": "MWF",
+            "number_of_sections": 3,
+            "max_students": 10,
+            "professors": [
+                "Dr. Smith",
+            ]
         },
         ...
     ]
     """
     courses = Course.query.all()
-    data = [{
-        'course_id': course.course_id,
-        'course_name': course.course_name,
-        'credit_hours': course.credit_hours,
-        'meeting_days': course.meeting_days
-    } for course in courses]
+    data = []
+    for course in courses:
+        course_data = {
+            'id': course.id,
+            'name': course.name,
+            'credit_hours': course.credit_hours,
+            'meeting_days': course.meeting_days,
+            'number_of_sections': len(course.sections),
+            'max_students': course.max_students,
+            'professors': [prof.name for prof in course.professors]
+        }
+        data.append(course_data)
     return jsonify(data)
+
+@courses_blueprint.route('/courses/<int:course_id>', methods=['GET'])
+def get_courses_by_ID(course_id):
+    """
+    Returns all courses with their number of sections and associated professors.
+    Output JSON:
+    [
+        {
+            "id": 1,
+            "name": "Science",
+            "credit_hours": 1,
+            "meeting_days": "MWF",
+            "max_students": 10,
+            "number_of_sections": 3,
+            "professors": [
+                {
+                    "max_credit_hours": 1,
+                    "name": "Dr. Smith",
+                    "professor_id": 1
+                },
+            ]
+            "rooms": [
+                {
+                    "id": 1,
+                    "name": "Room A"
+                    "capacity": 1,
+                }
+            ]
+        },
+        ...
+    ]
+    """
+    course = Course.query.get(course_id)
+    course_data = {
+            'id': course.id,
+            'name': course.name,
+            'credit_hours': course.credit_hours,
+            'meeting_days': course.meeting_days,
+            'max_students': course.max_students,
+            'number_of_sections': len(course.sections),
+            'professors': [prof.to_dict() for prof in course.professors],
+            'rooms': [room.to_dict() for room in course.rooms],
+        }
+    return jsonify(course_data)
+
 
 @courses_blueprint.route('/courses', methods=['POST'])
 def add_course():
-    """
-    Adds a new Course.
-    Expected JSON:
-    {
-        "course_name": "Mr Smith",
-        "credit_hours": 1,
-        "meeting_days": "MWF"
-    }
-    """
     data = request.json
+    print(data)
+    if not data.get('max_students'):
+        return jsonify({'error': 'Missing required fields'}), 400
     new_course = Course(
-        course_name=data.get('course_name'),
+        name=data.get('name'),
         credit_hours=data.get('credit_hours'),
-        meeting_days=data.get('meeting_days')
+        meeting_days=data.get('meeting_Days'),
+        max_students=data.get('max_students')
     )
     db.session.add(new_course)
     db.session.commit()
+
+    # Optionally create sections if provided
+    num_sections = data.get('numberOfSections')
+    if num_sections:
+        num_sections = int(num_sections)  # Convert string to int
+        for sec_num in range(1, num_sections + 1):
+            new_section = Section(course_id=new_course.id, section_number=sec_num)
+            db.session.add(new_section)
+
+    
+    # Optionally assign professors if provided
+    professors = data.get('professors')
+    if professors:
+        for prof in professors:
+            professor = Professor.query.get(prof)
+            if professor:
+                new_course.professors.append(professor)
+            else:
+                pass
+
+    db.session.commit()
     return jsonify({'message': 'Course added successfully'}), 201
+
 
 @courses_blueprint.route('/courses/<int:course_id>', methods=['DELETE'])
 def delete_course_by_id(course_id):
