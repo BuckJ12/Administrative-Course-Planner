@@ -13,6 +13,8 @@ import RoomDash from './Dashboard/pages/Rooms/RoomDash';
 import AddRoom from './Dashboard/pages/Rooms/AddRoom';
 import Room from './Dashboard/pages/Rooms/Room';
 import Sidebar from './Shared/components/Sidebar';
+import Home from './Home';
+import InvalidRoute from './InvalidRoute';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           {/* Define your routes here */}
           {/* Root route example */}
           {/* Course routes */}
+          <Route path='/' element={<Home />} />
+          <Route path='/home' element={<Home />} />
           <Route path='/courses' element={<CourseDash />} />
           <Route path='/courses/add' element={<AddCourse />} />
           <Route path='/course/:id' element={<Course />} />
@@ -35,6 +39,7 @@ function App() {
           <Route path='/rooms' element={<RoomDash />} />
           <Route path='/rooms/add' element={<AddRoom />} />
           <Route path='/room/:id' element={<Room />} />
+          <Route path='*' element={<InvalidRoute />} />
         </Routes>
       </Router>
     </div>
