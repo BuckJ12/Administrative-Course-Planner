@@ -25,9 +25,9 @@ function App() {
         <Routes>
           {/* Define your routes here */}
           {/* Root route example */}
-          {/* Course routes */}
           <Route path='/' element={<Home />} />
           <Route path='/home' element={<Home />} />
+          {/* Course routes */}
           <Route path='/courses' element={<CourseDash />} />
           <Route path='/courses/add' element={<AddCourse />} />
           <Route path='/course/:id' element={<Course />} />
@@ -39,6 +39,7 @@ function App() {
           <Route path='/rooms' element={<RoomDash />} />
           <Route path='/rooms/add' element={<AddRoom />} />
           <Route path='/room/:id' element={<Room />} />
+          {/* Invalid route */}
           <Route path='*' element={<InvalidRoute />} />
         </Routes>
       </Router>
