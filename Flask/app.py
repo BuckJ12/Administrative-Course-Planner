@@ -9,6 +9,9 @@ from routes.time_slots import time_slots_blueprint
 from routes.scheduler import scheduler_blueprint
 #from routes.auth import auth_blueprint
 from flask_cors import CORS
+import pymysql
+pymysql.install_as_MySQLdb()
+
 
 
 def create_app():
