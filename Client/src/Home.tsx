@@ -19,8 +19,9 @@ function Home() {
         <Container className='p-6 max-w-lg bg-white rounded-xl shadow-md flex justify-center space-x-4 m-auto p-2'>
           <Card className='text-center p-8 bg-white text-black rounded-xl'>
             <p className=' font-bold text-white bg-black mb-4 p-2'>
-              <p className='text-2xl m-0 p-0'>-ChronoSync-</p>
-              <p className='text-lg m-0 p-0'>Schedule Management System</p>
+              -ChronoSync-
+              <br />
+              Schedule Management System
             </p>
             <p className='text-md'>
               ChronoSync is a powerful tool designed to streamline the process
