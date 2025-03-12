@@ -17,7 +17,8 @@ def create_app():
     app.config.from_object(Config)
     db.init_app(app)
 
-    CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+    CORS(app)
+
 
     with app.app_context():
         db.create_all()
