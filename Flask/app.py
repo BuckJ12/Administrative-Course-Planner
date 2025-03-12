@@ -7,7 +7,7 @@ from routes.professors import professors_blueprint
 from routes.rooms import rooms_blueprint
 from routes.time_slots import time_slots_blueprint
 from routes.scheduler import scheduler_blueprint
-from routes.auth import auth_blueprint
+#from routes.auth import auth_blueprint
 from flask_cors import CORS
 
 
@@ -27,7 +27,7 @@ def create_app():
     app.register_blueprint(rooms_blueprint)
     app.register_blueprint(time_slots_blueprint)
     app.register_blueprint(scheduler_blueprint)
-    app.register_blueprint(auth_blueprint)
+    # app.register_blueprint(auth_blueprint)
     return app
 
 if __name__ == '__main__':
