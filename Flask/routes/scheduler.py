@@ -4,7 +4,7 @@ from scheduler import generate_schedule
 
 scheduler_blueprint = Blueprint('scheduler', __name__)
 
-@scheduler_blueprint.route('/generate_schedule', methods=['POST'])
+@scheduler_blueprint.route('/schedules/generate', methods=['GET'])
 def generate_schedule_route():
     result = generate_schedule(db.session)
     if result.get("status") != "Schedule generated successfully.":

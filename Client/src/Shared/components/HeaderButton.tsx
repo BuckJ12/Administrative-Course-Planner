@@ -8,13 +8,14 @@ interface HeaderButtonProps {
   handleClick: () => void;
 }
 
-function HeaderButton({
-  Icon, text, variant, handleClick,
-}: HeaderButtonProps) {
+function HeaderButton({ Icon, text, variant, handleClick }: HeaderButtonProps) {
   return (
-    <Button variant={variant ?? 'outline-primary'} className="ml-4 flex align-items-center gap-1" onClick={handleClick}>
+    <Button
+      variant={variant ?? 'outline-primary'}
+      className='ml-4 d-flex align-items-center gap-1'
+      onClick={handleClick}
+    >
       <Icon />
-      {' '}
       {text}
     </Button>
   );

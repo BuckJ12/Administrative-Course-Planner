@@ -48,13 +48,13 @@ def add_room():
         Adds a new Room
         Expected Json
         {
-            "room_name": Lab 103,
+            "name": Lab 103,
             "capacity": 1
         }
     """
     data = request.json
     new_room = Room(
-        room_name=data.get('room_name'),
+        name=data.get('name'),
         capacity=data.get('capacity')
     )
     db.session.add(new_room)

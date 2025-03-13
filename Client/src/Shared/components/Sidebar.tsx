@@ -128,6 +128,16 @@ function Sidebar() {
             </ul>
           )}
         </li>
+        <li className={styles.navItem}>
+          <NavLink
+            to='/schedules'
+            className={({ isActive }) =>
+              isActive ? `${styles.activeNavLink}` : ''
+            }
+          >
+            Schedule
+          </NavLink>
+        </li>
       </ul>
     </div>
   );

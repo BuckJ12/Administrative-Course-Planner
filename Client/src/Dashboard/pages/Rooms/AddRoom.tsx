@@ -19,8 +19,7 @@ function AddProfessor() {
 
   const schema = Joi.object({
     name: Joi.string().required().label('Name'),
-    max_credit_hours: Joi.number().required().min(1).label('Max Credits'),
-    courses: Joi.array().label('Courses'),
+    capacity: Joi.number().required().label('Capacity'),
   });
 
   async function doSubmit() {
@@ -31,8 +30,8 @@ function AddProfessor() {
       };
       await RoomService.create(NewRoom);
       console.log('Submit to api', NewRoom);
-      toast.success('Course Created Successfully');
-      Navigate('/courses');
+      toast.success('Room Created Successfully');
+      Navigate('/rooms');
     } catch {
       toast.error('An unexpected error occurred.');
     }

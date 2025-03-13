@@ -15,6 +15,7 @@ import Room from './Dashboard/pages/Rooms/Room';
 import Sidebar from './Shared/components/Sidebar';
 import Home from './Home';
 import InvalidRoute from './InvalidRoute';
+import Schedules from './Dashboard/pages/Schedules/Schedules';
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
           <Route path='/rooms' element={<RoomDash />} />
           <Route path='/rooms/add' element={<AddRoom />} />
           <Route path='/room/:id' element={<Room />} />
+
+          <Route path='/schedules' element={<Schedules />} />
+
           {/* Invalid route */}
           <Route path='*' element={<InvalidRoute />} />
         </Routes>

@@ -74,7 +74,7 @@ function Professor() {
 
       <ProfCard name={prof!.name} maxCreditHours={prof!.max_credit_hours} />
 
-      <div className='flex gap-4'>
+      <div className='gap-4'>
         <div className='mb-4'>
           <h4 className='mb-2'>Courses</h4>
           <ClickableTable

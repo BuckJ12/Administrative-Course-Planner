@@ -48,8 +48,8 @@ function AddProfessor() {
       };
       await ProfService.create(newProf);
       console.log('Submit to api', newProf);
-      toast.success('Course Created Successfully');
-      Navigate('/courses');
+      toast.success('Professor Created Successfully');
+      Navigate('/professors');
     } catch {
       toast.error('An unexpected error occurred.');
     }

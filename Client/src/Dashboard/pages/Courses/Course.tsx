@@ -32,7 +32,6 @@ function Course() {
       try {
         const data = await CourseService.getById(numericId);
         setCourse(data);
-        console.log(data);
         setIsLoading(false);
       } catch (error) {
         toast.error('Failed to fetch course details');
@@ -82,7 +81,7 @@ function Course() {
         max_students={course!.max_students}
       />
       <div className='flex gap-4'>
-        <div className='mb-4'>
+        <div className='mb-4 flex-auto'>
           <h4 className='mb-2'>Professors</h4>
           <ClickableTable
             columns={professorColumns}
@@ -93,7 +92,7 @@ function Course() {
           />
         </div>
 
-        <div className='mb-4'>
+        <div className='mb-4 flex-auto'>
           <h4 className='mb-2'>Allowed Rooms</h4>
           <ClickableTable
             columns={roomColumns}
