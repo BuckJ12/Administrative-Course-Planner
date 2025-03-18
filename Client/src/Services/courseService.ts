@@ -17,6 +17,14 @@ export default class CourseService {
     return response.data;
   }
 
+  static async update(id: number, updateCourse: courseDTO) {
+    const response = await CourseService.https.put(
+      `${apiEndpoint}/${id}`,
+      updateCourse
+    );
+    return response.data;
+  }
+
   static async getById(id: number): Promise<courseFullDTO> {
     const response = await CourseService.https.get(`${apiEndpoint}/${id}`);
     return response.data;

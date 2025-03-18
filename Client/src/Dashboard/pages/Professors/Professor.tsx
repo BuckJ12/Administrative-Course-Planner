@@ -30,6 +30,7 @@ function Professor() {
     const fetchCourse = async () => {
       try {
         const data = await ProfService.getById(numericId);
+        console.log(data);
         setProf(data);
         setIsLoading(false);
       } catch (error) {
@@ -53,7 +54,7 @@ function Professor() {
   ];
   const handleCourseRowClick = (row: courses) => navigate(`/course/${row.id}`);
 
-  const goToUpdate = () => toast('Feature Not Yet Implemented'); //navigate(`/course/${course?.course_id}/edit`); //Todo Fix edit to work
+  const goToUpdate = () => navigate(`/professors/add/${prof?.id}`);
   const goBack = () => navigate('/professors');
 
   if (isLoading) {

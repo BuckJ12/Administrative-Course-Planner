@@ -9,6 +9,8 @@ import ProfService from '@/Services/profService';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CourseService from '@/Services/courseService';
+import Loading from '@/Shared/components/Loading';
+import { useParams } from 'react-router-dom';
 
 interface FormProps {
   name: string;
@@ -16,8 +18,12 @@ interface FormProps {
   courses: courses[];
 }
 
-function AddProfessor() {
+function AddUpdateProfessor() {
   const [courses, setCourses] = useState<courses[]>([]);
+  const { id } = useParams();
+  const parsedId = id ? parseInt(id, 10) : undefined;
+  const isUpdateMode = parsedId !== undefined;
+  const [isLoading, setIsLoading] = useState(isUpdateMode);
   const Navigate = useNavigate();
   const fields: FormProps = {
     name: '',
@@ -39,6 +45,21 @@ function AddProfessor() {
     courses: Joi.array().label('Courses'),
   });
 
+  useEffect(() => {
+    if (isUpdateMode) {
+      loadParsedData(parsedId!).then(() => setIsLoading(false));
+    }
+  }, [parsedId]);
+
+  const loadParsedData = async (parseId: number) => {
+    const course = await ProfService.getById(parseId);
+    form.setData({
+      name: course.name,
+      max_credit_hours: course.max_credit_hours,
+      courses: course.courses,
+    });
+  };
+
   async function doSubmit() {
     try {
       const newProf: profDTO = {
@@ -46,8 +67,11 @@ function AddProfessor() {
         max_credit_hours: form.data.max_credit_hours,
         courses: form.data.courses.map((u) => u.id),
       };
-      await ProfService.create(newProf);
-      console.log('Submit to api', newProf);
+      if (isUpdateMode) {
+        await ProfService.update(parsedId!, newProf);
+      } else {
+        await ProfService.create(newProf);
+      }
       toast.success('Professor Created Successfully');
       Navigate('/professors');
     } catch {
@@ -73,6 +97,8 @@ function AddProfessor() {
         (Selectedcourse) => Selectedcourse.id === course.id
       )
   );
+
+  if (isLoading) return <Loading />;
 
   return (
     <>
@@ -101,4 +127,4 @@ function AddProfessor() {
   );
 }
 
-export default AddProfessor;
+export default AddUpdateProfessor;

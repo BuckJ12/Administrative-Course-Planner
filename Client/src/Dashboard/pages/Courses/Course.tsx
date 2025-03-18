@@ -54,7 +54,7 @@ function Course() {
     navigate(`/professor/${row.id}`);
   const handleRoomRowClick = (row: room) => navigate(`/room/${row.id}`);
 
-  const goToUpdate = () => toast('Feature Not Yet Implemented'); //navigate(`/course/${course?.course_id}/edit`); //Todo Fix edit to work
+  const goToUpdate = () => navigate(`/courses/add/${course?.id}`);
   const goBack = () => navigate('/courses');
 
   if (isLoading) {

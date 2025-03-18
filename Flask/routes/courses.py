@@ -147,86 +147,46 @@ def delete_course_by_name(course_name):
     db.session.commit()
     return jsonify({'message': 'Course deleted successfully'})
 
-@courses_blueprint.route('/courses/add_professors', methods=['POST'])
-def add_professors_to_course():
+@courses_blueprint.route('/courses/<int:course_id>', methods=['PUT'])
+def update_course_by_id(course_id):
     """
-    Assigns multiple professors to a course.
-    Expected JSON:
-    {
-        "course_id": 101,
-        "professor_ids": [1, 2, 3]
-    }
+    Updates Course by ID.
+    The course_id is provided in the URL.
     """
-    data = request.json
-    course_id = data.get('course_id')
-    professor_ids = data.get('professor_ids')
-
-    if not course_id or not professor_ids:
-        return jsonify({'error': 'Missing course_id or professor_ids'}), 400
-
     course = Course.query.get(course_id)
     if not course:
         return jsonify({'error': 'Course not found'}), 404
-
-    successful_additions = []
-    already_assigned = []
-
-    for professor_id in professor_ids:
-        professor = Professor.query.get(professor_id)
-        if not professor:
-            continue  # Skip invalid professors
-
-        # Check if the professor is already assigned to this course
-        existing_assignment = CourseProfessor.query.filter_by(professor_id=professor_id, course_id=course_id).first()
-        if existing_assignment:
-            already_assigned.append(professor_id)
-            continue
-
-        # Assign professor to the course
-        new_assignment = CourseProfessor(professor_id=professor_id, course_id=course_id)
-        db.session.add(new_assignment)
-        successful_additions.append(professor_id)
-
-    db.session.commit()
-
-    return jsonify({
-        'message': 'Professors assigned to course successfully',
-        'added_professors': successful_additions,
-        'already_assigned': already_assigned
-    }), 201
-
-@courses_blueprint.route('/courses/remove_professors', methods=['DELETE'])
-def remove_professors_from_course():
-    """
-    Removes multiple professors from a course.
-    Expected JSON:
-    {
-        "course_id": 101,
-        "professor_ids": [1, 2, 3]
-    }
-    """
     data = request.json
-    course_id = data.get('course_id')
-    professor_ids = data.get('professor_ids')
+    course.name = data.get('name', course.name)
+    course.credit_hours = data.get('credit_hours', course.credit_hours)
+    course.meeting_days = data.get('meeting_days', course.meeting_days)
+    course.max_students = data.get('max_students', course.max_students)
 
-    if not course_id or not professor_ids:
-        return jsonify({'error': 'Missing course_id or professor_ids'}), 400
-
-    assignments_deleted = []
-    not_found = []
-
-    for professor_id in professor_ids:
-        assignment = CourseProfessor.query.filter_by(professor_id=professor_id, course_id=course_id).first()
-        if assignment:
-            db.session.delete(assignment)
-            assignments_deleted.append(professor_id)
+    # Optionally create and delete sections if needed
+    num_sections = data.get('numberOfSections')
+    if num_sections:
+        num_sections = int(num_sections)
+        if len(course.sections) > num_sections:
+            for sec in course.sections[num_sections:]:
+                db.session.delete(sec)
         else:
-            not_found.append(professor_id)
-
+            for sec_num in range(len(course.sections) + 1, num_sections + 1):
+                new_section = Section(course_id=course.id, section_number=sec_num)
+                db.session.add(new_section)
+    
+    # Optionally assign or delete professors if needed
+    professors = data.get('professors')
+    if professors:
+        for prof in professors:
+            professor = Professor.query.get(prof)
+            if professor:
+                if professor not in course.professors:
+                    course.professors.append(professor)
+            else:
+                pass
+        for prof in course.professors:
+            if prof.id not in professors:
+                course.professors.remove(prof)
+                
     db.session.commit()
-
-    return jsonify({
-        'message': 'Professors removed from course successfully',
-        'removed_professors': assignments_deleted,
-        'not_found_professors': not_found
-    }), 200
+    return jsonify({'message': 'Course updated successfully'})

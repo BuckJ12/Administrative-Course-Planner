@@ -54,7 +54,7 @@ def get_professor_by_id(professor_id):
     if not prof:
         return jsonify({'error': 'Professor not found'}), 404
     data = {
-        'professor_id': prof.id,
+        'id': prof.id,
         'name': prof.name,
         'max_credit_hours': prof.max_credit_hours,
         'courses': [course.to_dict() for course in prof.courses]
@@ -88,6 +88,38 @@ def add_professor():
     db.session.add(new_prof)
     db.session.commit()
     return jsonify({'message': 'Professor added successfully'}), 201
+
+@professors_blueprint.route('/professors/<int:professor_id>', methods=['PUT'])
+def update_professor_by_id(professor_id):
+    """
+        Updates Professor by ID.
+        Id is stored in HTTP string
+    """
+    prof = Professor.query.get(professor_id)
+    if not prof:
+        return jsonify({'error': 'Professor not found'}), 404
+    data = request.json
+    prof.name = data.get('name', prof.name)
+    prof.max_credit_hours = data.get('max_credit_hours', prof.max_credit_hours)
+
+    # Optionally assign and delete courses if provided
+    courses = data.get('courses')
+    if courses:
+        for cour in courses:
+            course = Course.query.get(cour)
+            if course:
+                if course not in prof.courses:
+                    prof.courses.append(course)
+            else:
+                pass
+        for course in prof.courses:
+            if course.id not in courses:
+                prof.courses.remove(course)
+
+                
+    db.session.commit()
+    return jsonify({'message': 'Professor updated successfully'})
+
 
 @professors_blueprint.route('/professors/<int:professor_id>', methods=['DELETE'])
 def delete_professor_by_id(professor_id):

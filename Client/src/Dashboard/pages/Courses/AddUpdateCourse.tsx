@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 import ProfService from '@/Services/profService';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import Loading from '@/Shared/components/Loading';
 
 interface FormProps {
   name: string;
@@ -19,8 +21,12 @@ interface FormProps {
   professors: professor[];
 }
 
-function AddCourse() {
+function AddUpdateCourse() {
   const [professors, setProfessors] = useState<professor[]>([]);
+  const { id } = useParams();
+  const parsedId = id ? parseInt(id, 10) : undefined;
+  const [isLoading, setIsLoading] = useState(true);
+  const isUpdateMode = parsedId !== undefined;
   const Navigate = useNavigate();
   const fields: FormProps = {
     name: '',
@@ -48,6 +54,24 @@ function AddCourse() {
     professors: Joi.array().label('Professors'),
   });
 
+  useEffect(() => {
+    if (isUpdateMode) {
+      loadParsedData(parsedId!).then(() => setIsLoading(false));
+    }
+  }, [parsedId]);
+
+  const loadParsedData = async (parseId: number) => {
+    const course = await courseService.getById(parseId);
+    form.setData({
+      name: course.name,
+      credits: course.credit_hours,
+      days: course.meeting_days,
+      sections: course.number_of_sections,
+      max_students: course.max_students,
+      professors: course.professors,
+    });
+  };
+
   async function doSubmit() {
     try {
       const newCourse: courseDTO = {
@@ -58,8 +82,11 @@ function AddCourse() {
         max_students: form.data.max_students,
         professors: form.data.professors.map((u) => u.id),
       };
-      await courseService.create(newCourse);
-      console.log('Submit to api', newCourse);
+      if (isUpdateMode) {
+        await courseService.update(parsedId!, newCourse);
+      } else {
+        await courseService.create(newCourse);
+      }
       toast.success('Course Created Successfully');
       Navigate('/courses');
     } catch {
@@ -73,9 +100,7 @@ function AddCourse() {
   };
 
   const handleProfDelete = (id: number) => {
-    console.log('delete', id);
     const Newprofs = form.data.professors.filter((u) => u.id !== id);
-    console.log(Newprofs);
     form.handleDataChange('professors', Newprofs);
   };
 
@@ -85,6 +110,8 @@ function AddCourse() {
     (prof) =>
       !form.data.professors.some((selectedProf) => selectedProf.id === prof.id)
   );
+
+  if (isLoading) return <Loading />;
 
   return (
     <>
@@ -126,4 +153,4 @@ function AddCourse() {
   );
 }
 
-export default AddCourse;
+export default AddUpdateCourse;

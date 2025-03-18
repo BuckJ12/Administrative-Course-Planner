@@ -11,6 +11,14 @@ export default class ProfService {
     return response.data;
   }
 
+  static async update(id: number, updateProf: profDTO) {
+    const response = await ProfService.https.put(
+      `${apiEndpoint}/${id}`,
+      updateProf
+    );
+    return response.data;
+  }
+
   static async create(createProf: profDTO) {
     const response = await ProfService.https.post(apiEndpoint, createProf);
     return response.data;

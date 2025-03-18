@@ -104,8 +104,8 @@ def generate_schedule(db_session):
 
     # Solve the model
     solver = cp_model.CpSolver()
-    solver.parameters.cp_model_presolve = False  # Disables presolve to see raw constraint interactions
-    solver.parameters.log_search_progress = True
+    #solver.parameters.cp_model_presolve = False  # Disables presolve to see raw constraint interactions
+    #solver.parameters.log_search_progress = True
     
     
     status = solver.Solve(model)
