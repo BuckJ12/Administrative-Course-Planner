@@ -10,7 +10,7 @@ import ProfDash from './Dashboard/pages/Professors/ProfDash';
 import Professor from './Dashboard/pages/Professors/Professor';
 import AddProfessor from './Dashboard/pages/Professors/AddUpdateProfessors';
 import RoomDash from './Dashboard/pages/Rooms/RoomDash';
-import AddRoom from './Dashboard/pages/Rooms/AddRoom';
+import AddRoom from './Dashboard/pages/Rooms/AddUpdateRoom';
 import Room from './Dashboard/pages/Rooms/Room';
 import Sidebar from './Shared/components/Sidebar';
 import Home from './Home';
@@ -41,6 +41,7 @@ function App() {
           {/* Room routes */}
           <Route path='/rooms' element={<RoomDash />} />
           <Route path='/rooms/add' element={<AddRoom />} />
+          <Route path='/rooms/add/:id' element={<AddRoom />} />
           <Route path='/room/:id' element={<Room />} />
           {/* Schedule routes */}
           <Route path='/schedules' element={<Schedules />} />

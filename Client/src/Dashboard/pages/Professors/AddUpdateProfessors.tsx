@@ -23,6 +23,7 @@ function AddUpdateProfessor() {
   const { id } = useParams();
   const parsedId = id ? parseInt(id, 10) : undefined;
   const isUpdateMode = parsedId !== undefined;
+  const Message = isUpdateMode ? 'Update Professor' : 'Add Professor';
   const [isLoading, setIsLoading] = useState(isUpdateMode);
   const Navigate = useNavigate();
   const fields: FormProps = {
@@ -69,10 +70,11 @@ function AddUpdateProfessor() {
       };
       if (isUpdateMode) {
         await ProfService.update(parsedId!, newProf);
+        toast.success('Professor Updated Successfully');
       } else {
         await ProfService.create(newProf);
+        toast.success('Professor Created Successfully');
       }
-      toast.success('Professor Created Successfully');
       Navigate('/professors');
     } catch {
       toast.error('An unexpected error occurred.');
@@ -102,7 +104,7 @@ function AddUpdateProfessor() {
 
   return (
     <>
-      <h1> Add Professor</h1>
+      <h1> {Message}</h1>
       {form.renderInput({ id: 'name', label: 'Name', type: 'string' })}
       {form.renderInput({
         id: 'max_credit_hours',

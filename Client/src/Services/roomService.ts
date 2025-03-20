@@ -20,4 +20,12 @@ export default class RoomService {
     const response = await RoomService.https.get(`${apiEndpoint}/${id}`);
     return response.data;
   }
+
+  static async update(id: number, updateRoom: roomDTO) {
+    const response = await RoomService.https.put(
+      `${apiEndpoint}/${id}`,
+      updateRoom
+    );
+    return response.data;
+  }
 }

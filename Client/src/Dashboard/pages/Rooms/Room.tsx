@@ -39,8 +39,8 @@ function Room() {
     fetchCourse();
   }, []);
 
-  const goToUpdate = () => toast('Feature Not Yet Implemented'); //navigate(`/course/${course?.course_id}/edit`); //Todo Fix edit to work
-  const goBack = () => navigate('/professors');
+  const goToUpdate = () => navigate(`/rooms/add/${id}`);
+  const goBack = () => navigate('/rooms');
 
   if (isLoading) {
     return <Loading />;

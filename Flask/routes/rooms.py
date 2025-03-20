@@ -73,3 +73,22 @@ def delete_room_by_id(room_id):
     db.session.delete(room)
     db.session.commit()
     return jsonify({'message': 'Room deleted successfully'})
+
+@rooms_blueprint.route('/rooms/<int:room_id>', methods=['PUT'])
+def update_room_by_id(room_id):
+    """
+        Updates Room by ID
+        Expected Json
+        {
+            "name": Lab 103,
+            "capacity": 1"
+        }"
+    """
+    room = Room.query.get(room_id)
+    if not room:
+        return jsonify({'error': 'Room not found'}), 404
+    data = request.json
+    room.name = data.get('name')
+    room.capacity = data.get('capacity')
+    db.session.commit()
+    return jsonify({'message': 'Room updated successfully'})

@@ -27,6 +27,7 @@ function AddUpdateCourse() {
   const parsedId = id ? parseInt(id, 10) : undefined;
   const [isLoading, setIsLoading] = useState(true);
   const isUpdateMode = parsedId !== undefined;
+  const Message = isUpdateMode ? 'Update Course' : 'Add Course';
   const Navigate = useNavigate();
   const fields: FormProps = {
     name: '',
@@ -84,10 +85,11 @@ function AddUpdateCourse() {
       };
       if (isUpdateMode) {
         await courseService.update(parsedId!, newCourse);
+        toast.success('Course Updated Successfully');
       } else {
         await courseService.create(newCourse);
+        toast.success('Course Created Successfully');
       }
-      toast.success('Course Created Successfully');
       Navigate('/courses');
     } catch {
       toast.error('An unexpected error occurred.');
@@ -115,7 +117,7 @@ function AddUpdateCourse() {
 
   return (
     <>
-      <h1> Add Course</h1>
+      <h1> {Message}</h1>
       {form.renderInput({ id: 'name', label: 'Name', type: 'string' })}
       {form.renderInput({
         id: 'credits',
