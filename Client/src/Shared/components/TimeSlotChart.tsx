@@ -7,12 +7,14 @@ interface TimeSlotChartProps {
   timeSlots: timeSlot[];
   selectedIds: number[];
   onToggle: (id: number) => void;
+  readOnly?: boolean;
 }
 
 const TimeSlotChart: React.FC<TimeSlotChartProps> = ({
   timeSlots,
   selectedIds,
   onToggle,
+  readOnly = false,
 }) => {
   // Generate a sorted list of unique times from the timeSlots data.
   const uniqueTimes = Array.from(
@@ -56,6 +58,7 @@ const TimeSlotChart: React.FC<TimeSlotChartProps> = ({
                 <IconCheckbox
                   checked={selectedIds.includes(mwfLookup[time].id)}
                   onClick={() => onToggle(mwfLookup[time].id)}
+                  readOnly={readOnly}
                 />
               )}
             </td>
@@ -64,6 +67,7 @@ const TimeSlotChart: React.FC<TimeSlotChartProps> = ({
                 <IconCheckbox
                   checked={selectedIds.includes(tthLookup[time].id)}
                   onClick={() => onToggle(tthLookup[time].id)}
+                  readOnly={readOnly}
                 />
               )}
             </td>

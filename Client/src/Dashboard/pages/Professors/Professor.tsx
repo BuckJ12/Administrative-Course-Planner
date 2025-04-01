@@ -9,9 +9,13 @@ import Loading from '@/Shared/components/Loading';
 import ProfCard from './ProfCard';
 import { profFullDTO } from '@/types/professorTypes';
 import { courses } from '@/types/courseTypes';
+import TimeSlotsService from '@/Services/timeSlotsService';
+import TimeSlotChart from '@/Shared/components/TimeSlotChart';
+import { timeSlot } from '@/types/timeTypes';
 
 function Professor() {
   const navigate = useNavigate();
+  const [timeSlots, setTimeSlots] = useState<timeSlot[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [prof, setProf] = useState<profFullDTO | null>(null);
   const { id } = useParams();
@@ -32,6 +36,8 @@ function Professor() {
         const data = await ProfService.getById(numericId);
         console.log(data);
         setProf(data);
+        const timeSlotsData = await TimeSlotsService.getAll();
+        setTimeSlots(timeSlotsData);
         setIsLoading(false);
       } catch (error) {
         toast.error('Failed to fetch course details');
@@ -84,6 +90,15 @@ function Professor() {
             onRowClick={handleCourseRowClick}
             onRowDelete={undefined}
             deleteModalRenderer={undefined}
+          />
+        </div>
+        <div className='mb-4'>
+          <h4 className='mb-2'>Time Slots</h4>
+          <TimeSlotChart
+            timeSlots={timeSlots}
+            selectedIds={prof?.timeSlotRestrictions || []}
+            readOnly={true}
+            onToggle={() => {}}
           />
         </div>
       </div>

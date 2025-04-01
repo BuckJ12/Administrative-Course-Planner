@@ -4,14 +4,25 @@ import { FaTimes } from 'react-icons/fa';
 interface IconCheckboxProps {
   checked: boolean;
   onClick: () => void;
+  readOnly?: boolean;
 }
 
-const IconCheckbox: React.FC<IconCheckboxProps> = ({ checked, onClick }) => {
+const IconCheckbox: React.FC<IconCheckboxProps> = ({
+  checked,
+  onClick,
+  readOnly = false,
+}) => {
+  const handleClick = () => {
+    if (!readOnly) {
+      onClick();
+    }
+  };
+
   return (
     <span
-      onClick={onClick}
+      onClick={handleClick}
       style={{
-        cursor: 'pointer',
+        cursor: readOnly ? 'default' : 'pointer',
         display: 'flex',
         width: '20px',
         height: '20px',
