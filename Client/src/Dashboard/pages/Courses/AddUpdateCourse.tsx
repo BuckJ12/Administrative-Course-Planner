@@ -150,7 +150,7 @@ function AddUpdateCourse() {
         handleDelete={handleProfDelete}
       />
 
-      {form.renderButton('Create')}
+      {form.renderButton(isUpdateMode ? 'Update' : 'Create')}
     </>
   );
 }

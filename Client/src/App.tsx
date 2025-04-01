@@ -16,6 +16,7 @@ import Sidebar from './Shared/components/Sidebar';
 import Home from './Home';
 import InvalidRoute from './InvalidRoute';
 import Schedules from './Dashboard/pages/Schedules/Schedules';
+import Testpage from './Dashboard/pages/testpage';
 
 function App() {
   return (
@@ -45,6 +46,9 @@ function App() {
           <Route path='/room/:id' element={<Room />} />
           {/* Schedule routes */}
           <Route path='/schedules' element={<Schedules />} />
+
+          {/* Testing route */}
+          <Route path='/test' element={<Testpage />} />
 
           {/* Invalid route */}
           <Route path='*' element={<InvalidRoute />} />

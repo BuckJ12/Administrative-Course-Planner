@@ -1,25 +1,30 @@
 import useForm from '@/Shared/hooks/useForm';
 import { courses } from '@/types/courseTypes';
 import { profDTO } from '@/types/professorTypes';
-import ReactiveSearchWithTable from '@/Shared/components/ReactiveSearchWithTable';
-import Joi from 'joi';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-import ProfService from '@/Services/profService';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import ReactiveSearchWithTable from '@/Shared/components/ReactiveSearchWithTable';
+import Joi from 'joi';
+import ProfService from '@/Services/profService';
 import CourseService from '@/Services/courseService';
 import Loading from '@/Shared/components/Loading';
-import { useParams } from 'react-router-dom';
+import TimeSlotsService from '@/Services/timeSlotsService';
+import { timeSlot } from '@/types/timeTypes';
+import TimeSlotChart from '@/Shared/components/TimeSlotChart';
 
 interface FormProps {
   name: string;
   max_credit_hours: number;
   courses: courses[];
+  selectedTimeSlots: number[];
 }
 
 function AddUpdateProfessor() {
   const [courses, setCourses] = useState<courses[]>([]);
+  const [timeSlots, setTimeSlots] = useState<timeSlot[]>([]);
   const { id } = useParams();
   const parsedId = id ? parseInt(id, 10) : undefined;
   const isUpdateMode = parsedId !== undefined;
@@ -30,11 +35,14 @@ function AddUpdateProfessor() {
     name: '',
     max_credit_hours: 0,
     courses: [],
+    selectedTimeSlots: [],
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await CourseService.getAll();
+      const timeData = await TimeSlotsService.getAll();
+      setTimeSlots(timeData);
       setCourses(data);
     };
     fetchData();
@@ -44,6 +52,7 @@ function AddUpdateProfessor() {
     name: Joi.string().required().label('Name'),
     max_credit_hours: Joi.number().required().min(1).label('Max Credits'),
     courses: Joi.array().label('Courses'),
+    selectedTimeSlots: Joi.array().label('Time Slots'),
   });
 
   useEffect(() => {
@@ -53,11 +62,13 @@ function AddUpdateProfessor() {
   }, [parsedId]);
 
   const loadParsedData = async (parseId: number) => {
-    const course = await ProfService.getById(parseId);
+    const prof = await ProfService.getById(parseId);
+    console.log(prof);
     form.setData({
-      name: course.name,
-      max_credit_hours: course.max_credit_hours,
-      courses: course.courses,
+      name: prof.name,
+      max_credit_hours: prof.max_credit_hours,
+      courses: prof.courses,
+      selectedTimeSlots: prof.timeSlotRestrictions,
     });
   };
 
@@ -67,6 +78,7 @@ function AddUpdateProfessor() {
         name: form.data.name,
         max_credit_hours: form.data.max_credit_hours,
         courses: form.data.courses.map((u) => u.id),
+        timeSlotRestrictions: form.data.selectedTimeSlots,
       };
       if (isUpdateMode) {
         await ProfService.update(parsedId!, newProf);
@@ -100,6 +112,20 @@ function AddUpdateProfessor() {
       )
   );
 
+  const toggleTimeSelection = (id: number) => {
+    if (form.data.selectedTimeSlots.includes(id)) {
+      form.handleDataChange(
+        'selectedTimeSlots',
+        form.data.selectedTimeSlots.filter((item) => item !== id)
+      );
+    } else {
+      form.handleDataChange('selectedTimeSlots', [
+        ...form.data.selectedTimeSlots,
+        id,
+      ]);
+    }
+  };
+
   if (isLoading) return <Loading />;
 
   return (
@@ -124,7 +150,13 @@ function AddUpdateProfessor() {
         handleDelete={handleCourseDelete}
       />
 
-      {form.renderButton('Create')}
+      <TimeSlotChart
+        timeSlots={timeSlots}
+        selectedIds={form.data.selectedTimeSlots}
+        onToggle={toggleTimeSelection}
+      />
+
+      {form.renderButton(isUpdateMode ? 'Update' : 'Create')}
     </>
   );
 }

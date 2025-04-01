@@ -77,7 +77,8 @@ function AddUpdateRoom() {
         label: 'Capacity',
         type: 'number',
       })}
-      {form.renderButton('Create')}
+
+      {form.renderButton(isUpdateMode ? 'Update' : 'Create')}
     </>
   );
 }

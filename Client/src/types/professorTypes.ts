@@ -11,6 +11,7 @@ export interface profDTO {
   name: string;
   max_credit_hours: number;
   courses: number[];
+  timeSlotRestrictions: number[];
 }
 
 export interface profFullDTO {
@@ -18,4 +19,5 @@ export interface profFullDTO {
   name: string;
   max_credit_hours: number;
   courses: courses[];
+  timeSlotRestrictions: number[];
 }

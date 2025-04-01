@@ -31,6 +31,8 @@ class Professor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     max_credit_hours = db.Column(db.Integer, nullable=False)
+    time_restrictions = db.relationship('TimeSlot', secondary='Time_Restrictions',
+                                backref=db.backref('professors', lazy=True))
 
     def to_dict(self):
         return {
@@ -68,6 +70,13 @@ class TimeSlot(db.Model):
     time = db.Column(db.String(20), nullable=False)
     meeting_days = db.Column(db.Enum('MWF', 'TTh'), nullable=False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'time': self.time,
+            'meeting_days': self.meeting_days,
+        }
+
 class Section(db.Model):
     __tablename__ = 'Sections'
     id = db.Column(db.Integer, primary_key=True)
@@ -91,3 +100,9 @@ class User(db.Model):
         self.username = username
         self.password = generate_password_hash(password)
         self.permission = permission
+
+class TimeRestrictions(db.Model):
+    __tablename__ = 'Time_Restrictions'
+    professor_id = db.Column(db.Integer, db.ForeignKey('Professors.id', ondelete='CASCADE'), primary_key=True)
+    timeslot_id = db.Column(db.Integer, db.ForeignKey('Time_Slots.id', ondelete='CASCADE'), primary_key=True)
+

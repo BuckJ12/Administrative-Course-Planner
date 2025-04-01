@@ -9,14 +9,14 @@ def get_time_slots():
     Returns all the Time Slots
     Output Json
     {
-        "time_slot_id": 1,
+        "id": 1,
         "time": 2:30,
         "meeting_days": MWF
     }
     """
     ts = TimeSlot.query.all()
     data = [{
-        'time_slot_id': slot.time_slot_id,
+        'id': slot.id,
         'time': slot.time,
         'meeting_days': slot.meeting_days
     } for slot in ts]
