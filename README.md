@@ -1,11 +1,15 @@
 # Administrative-Course-Planner
 
-## config.py
+## EXAMPLE ENVs
 
-### File setup
+### Client
 
 ```
-    class Config:
-        SQLALCHEMY_DATABASE_URI="mysql+pymysql://usernmae:password@SQLserverIPaddress/DatabaseName"
-        SQLALCHEMY_TRACK_MODIFICATIONS = False
+        APIURL = 'BASEURLFORBACKEND'
+```
+
+### FLASK
+
+```
+        MYSQL_PUBLIC_URL = "mysql+pymysql://username:password@IPADDRESS:PORT/DATABASENAME"
 ```
