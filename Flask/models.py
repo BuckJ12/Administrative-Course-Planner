@@ -11,6 +11,7 @@ class Course(db.Model):
     credit_hours = db.Column(db.Integer, nullable=False)
     meeting_days = db.Column(db.Enum('MWF', 'TTh'), nullable=False)
     sections = db.relationship('Section', backref='course', cascade="all, delete", lazy=True)
+    slots_needed = db.Column(db.Integer, default=1, nullable=False) 
     max_students = db.Column(db.Integer, nullable=False)
     professors = db.relationship('Professor', secondary='Course_Professors',
                                 backref=db.backref('courses', lazy=True))

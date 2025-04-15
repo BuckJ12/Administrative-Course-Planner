@@ -12,12 +12,20 @@ export default function Schedules() {
     { title: 'Professor', field: 'professor' },
     { title: 'Room', field: 'room' },
     { title: 'Day', field: 'days' },
-    { title: 'Time', field: 'time' },
+    {
+      title: 'Time Slots',
+      field: 'time_slots',
+      render: (rowData: any) =>
+        Array.isArray(rowData.time_slots)
+          ? rowData.time_slots.join(', ')
+          : rowData.time_slots,
+    },
   ];
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await schedulerService.getNew();
+      //console.log(data.schedule);
       setSchedulerData(data.schedule);
       setIsLoading(false);
     };

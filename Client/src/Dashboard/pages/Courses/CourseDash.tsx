@@ -15,6 +15,7 @@ function CourseDash() {
     { title: 'Days', field: 'meeting_days' },
     { title: 'Sections', field: 'number_of_sections' },
     { title: 'Max Students', field: 'max_students' },
+    { title: 'Time Slots Needed', field: 'slots_needed' },
     {
       title: 'Professors',
       field: 'professors',

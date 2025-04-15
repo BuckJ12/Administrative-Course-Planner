@@ -17,6 +17,7 @@ interface FormProps {
   credits: number;
   days: string;
   sections: number;
+  slots_needed: number;
   max_students: number;
   professors: professor[];
 }
@@ -36,6 +37,7 @@ function AddUpdateCourse() {
     sections: 0,
     max_students: 0,
     professors: [],
+    slots_needed: 0,
   };
 
   useEffect(() => {
@@ -53,6 +55,7 @@ function AddUpdateCourse() {
     sections: Joi.number().required().min(1).label('Sections'),
     max_students: Joi.number().required().min(1).label('Max Students'),
     professors: Joi.array().label('Professors'),
+    slots_needed: Joi.number().min(1).label('Slots Needed'),
   });
 
   useEffect(() => {
@@ -70,6 +73,7 @@ function AddUpdateCourse() {
       sections: course.number_of_sections,
       max_students: course.max_students,
       professors: course.professors,
+      slots_needed: course.slots_needed,
     });
   };
 
@@ -81,6 +85,7 @@ function AddUpdateCourse() {
         meeting_Days: form.data.days,
         numberOfSections: form.data.sections,
         max_students: form.data.max_students,
+        slots_needed: form.data.slots_needed,
         professors: form.data.professors.map((u) => u.id),
       };
       if (isUpdateMode) {
@@ -136,6 +141,11 @@ function AddUpdateCourse() {
       {form.renderInput({
         id: 'max_students',
         label: 'Max Students',
+        type: 'number',
+      })}
+      {form.renderInput({
+        id: 'slots_needed',
+        label: 'Time Blocks Needed',
         type: 'number',
       })}
       <ReactiveSearchWithTable

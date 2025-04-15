@@ -18,6 +18,7 @@ export interface courseDTO {
   numberOfSections: number;
   max_students: number;
   professors: number[];
+  slots_needed: number;
 }
 
 export interface courseFullDTO {
@@ -26,6 +27,7 @@ export interface courseFullDTO {
   credit_hours: number;
   meeting_days: string;
   number_of_sections: number;
+  slots_needed: number;
   max_students: number;
   professors: professor[];
   rooms: room[];

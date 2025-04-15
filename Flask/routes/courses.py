@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import Course, Professor, CourseProfessor, Section, db
+from models import Course, Professor, Section, db
 
 courses_blueprint = Blueprint('courses', __name__)
 
@@ -16,6 +16,7 @@ def get_courses():
             "meeting_days": "MWF",
             "number_of_sections": 3,
             "max_students": 10,
+            "slots_needed": 1,
             "professors": [
                 "Dr. Smith",
             ]
@@ -33,6 +34,7 @@ def get_courses():
             'meeting_days': course.meeting_days,
             'number_of_sections': len(course.sections),
             'max_students': course.max_students,
+            'slots_needed': course.slots_needed,
             'professors': [prof.name for prof in course.professors]
         }
         data.append(course_data)
@@ -50,6 +52,7 @@ def get_courses_by_ID(course_id):
             "credit_hours": 1,
             "meeting_days": "MWF",
             "max_students": 10,
+            "slots_needed": 1,
             "number_of_sections": 3,
             "professors": [
                 {
@@ -76,6 +79,7 @@ def get_courses_by_ID(course_id):
             'credit_hours': course.credit_hours,
             'meeting_days': course.meeting_days,
             'max_students': course.max_students,
+            'slots_needed': course.slots_needed,
             'number_of_sections': len(course.sections),
             'professors': [prof.to_dict() for prof in course.professors],
             'rooms': [room.to_dict() for room in course.rooms],
@@ -93,7 +97,8 @@ def add_course():
         name=data.get('name'),
         credit_hours=data.get('credit_hours'),
         meeting_days=data.get('meeting_Days'),
-        max_students=data.get('max_students')
+        max_students=data.get('max_students'),
+        slots_needed=data.get('slots_needed', 1),
     )
     db.session.add(new_course)
     db.session.commit()
@@ -148,6 +153,7 @@ def update_course_by_id(course_id):
     course.credit_hours = data.get('credit_hours', course.credit_hours)
     course.meeting_days = data.get('meeting_days', course.meeting_days)
     course.max_students = data.get('max_students', course.max_students)
+    course.slots_needed = data.get('slots_needed', course.slots_needed)
 
     # Optionally create and delete sections if needed
     num_sections = data.get('numberOfSections')
