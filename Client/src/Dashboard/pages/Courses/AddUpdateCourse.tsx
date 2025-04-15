@@ -25,9 +25,9 @@ function AddUpdateCourse() {
   const [professors, setProfessors] = useState<professor[]>([]);
   const { id } = useParams();
   const parsedId = id ? parseInt(id, 10) : undefined;
-  const [isLoading, setIsLoading] = useState(true);
   const isUpdateMode = parsedId !== undefined;
   const Message = isUpdateMode ? 'Update Course' : 'Add Course';
+  const [isLoading, setIsLoading] = useState(isUpdateMode);
   const Navigate = useNavigate();
   const fields: FormProps = {
     name: '',

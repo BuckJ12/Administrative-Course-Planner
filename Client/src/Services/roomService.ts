@@ -28,4 +28,9 @@ export default class RoomService {
     );
     return response.data;
   }
+
+  static async delete(id: number) {
+    const response = await RoomService.https.delete(`${apiEndpoint}/${id}`);
+    return response.data;
+  }
 }

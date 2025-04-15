@@ -17,42 +17,45 @@ import Home from './Home';
 import InvalidRoute from './InvalidRoute';
 import Schedules from './Dashboard/pages/Schedules/Schedules';
 import Testpage from './Dashboard/pages/testpage';
+import { ModalProvider } from './Shared/components/ModalContext';
 
 function App() {
   return (
     <div className={styles.content}>
       <Router>
         <ToastContainer />
-        <Sidebar />
-        <Routes>
-          {/* Define your routes here */}
-          {/* Root route example */}
-          <Route path='/' element={<Home />} />
-          <Route path='/home' element={<Home />} />
-          {/* Course routes */}
-          <Route path='/courses' element={<CourseDash />} />
-          <Route path='/courses/add' element={<AddCourse />} />
-          <Route path='/courses/add/:id' element={<AddCourse />} />
-          <Route path='/course/:id' element={<Course />} />
-          {/* Professors route */}
-          <Route path='/professors' element={<ProfDash />} />
-          <Route path='/professors/add' element={<AddProfessor />} />
-          <Route path='/professors/add/:id' element={<AddProfessor />} />
-          <Route path='/professor/:id' element={<Professor />} />
-          {/* Room routes */}
-          <Route path='/rooms' element={<RoomDash />} />
-          <Route path='/rooms/add' element={<AddRoom />} />
-          <Route path='/rooms/add/:id' element={<AddRoom />} />
-          <Route path='/room/:id' element={<Room />} />
-          {/* Schedule routes */}
-          <Route path='/schedules' element={<Schedules />} />
+        <ModalProvider>
+          <Sidebar />
+          <Routes>
+            {/* Define your routes here */}
+            {/* Root route example */}
+            <Route path='/' element={<Home />} />
+            <Route path='/home' element={<Home />} />
+            {/* Course routes */}
+            <Route path='/courses' element={<CourseDash />} />
+            <Route path='/courses/add' element={<AddCourse />} />
+            <Route path='/courses/add/:id' element={<AddCourse />} />
+            <Route path='/course/:id' element={<Course />} />
+            {/* Professors route */}
+            <Route path='/professors' element={<ProfDash />} />
+            <Route path='/professors/add' element={<AddProfessor />} />
+            <Route path='/professors/add/:id' element={<AddProfessor />} />
+            <Route path='/professor/:id' element={<Professor />} />
+            {/* Room routes */}
+            <Route path='/rooms' element={<RoomDash />} />
+            <Route path='/rooms/add' element={<AddRoom />} />
+            <Route path='/rooms/add/:id' element={<AddRoom />} />
+            <Route path='/room/:id' element={<Room />} />
+            {/* Schedule routes */}
+            <Route path='/schedules' element={<Schedules />} />
 
-          {/* Testing route */}
-          <Route path='/test' element={<Testpage />} />
+            {/* Testing route */}
+            <Route path='/test' element={<Testpage />} />
 
-          {/* Invalid route */}
-          <Route path='*' element={<InvalidRoute />} />
-        </Routes>
+            {/* Invalid route */}
+            <Route path='*' element={<InvalidRoute />} />
+          </Routes>
+        </ModalProvider>
       </Router>
     </div>
   );

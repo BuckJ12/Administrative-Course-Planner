@@ -29,4 +29,9 @@ export default class CourseService {
     const response = await CourseService.https.get(`${apiEndpoint}/${id}`);
     return response.data;
   }
+
+  static async delete(id: number) {
+    const response = await CourseService.https.delete(`${apiEndpoint}/${id}`);
+    return response.data;
+  }
 }

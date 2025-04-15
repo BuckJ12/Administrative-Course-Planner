@@ -134,19 +134,6 @@ def delete_course_by_id(course_id):
     db.session.commit()
     return jsonify({'message': 'Course deleted successfully'})
 
-@courses_blueprint.route('/courses/delete_by_name/<string:course_name>', methods=['DELETE'])
-def delete_course_by_name(course_name):
-    """
-    Deletes Course by Name.
-    The course name is provided in the URL.
-    """
-    course = Course.query.filter_by(course_name=course_name).first()
-    if not course:
-        return jsonify({'error': 'Course not found'}), 404
-    db.session.delete(course)
-    db.session.commit()
-    return jsonify({'message': 'Course deleted successfully'})
-
 @courses_blueprint.route('/courses/<int:course_id>', methods=['PUT'])
 def update_course_by_id(course_id):
     """

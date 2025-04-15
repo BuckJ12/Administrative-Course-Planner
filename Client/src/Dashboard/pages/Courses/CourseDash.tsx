@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ClickableTable from '@/Shared/components/ClickableTable';
 import courseService from '@/Services/courseService';
 import { courses } from '@/types/courseTypes';
+import { toast } from 'react-toastify';
 
 function CourseDash() {
   const [courses, setCourses] = useState<courses[]>([]);
@@ -36,8 +37,21 @@ function CourseDash() {
     navigate(`/course/${row.id}`);
   };
 
-  const handleDeleteClick = () => {
-    // TODO: implement click functionality
+  const deleteCourse = async (id: number) => {
+    await courseService.delete(id);
+  };
+
+  const handleDeleteClick = async (c: courses) => {
+    const originalCourses = [...courses];
+    try {
+      setCourses(courses.filter((course) => course.id !== c.id));
+      await deleteCourse(c.id);
+      toast.success('Course deleted successfully');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setCourses(originalCourses);
+      toast.error('Error deleting course, please try again');
+    }
   };
 
   return (

@@ -10,7 +10,7 @@ class Course(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     credit_hours = db.Column(db.Integer, nullable=False)
     meeting_days = db.Column(db.Enum('MWF', 'TTh'), nullable=False)
-    sections = db.relationship('Section', backref='course', lazy=True)
+    sections = db.relationship('Section', backref='course', cascade="all, delete", lazy=True)
     max_students = db.Column(db.Integer, nullable=False)
     professors = db.relationship('Professor', secondary='Course_Professors',
                                 backref=db.backref('courses', lazy=True))
