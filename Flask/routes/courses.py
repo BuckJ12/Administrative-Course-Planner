@@ -90,7 +90,6 @@ def get_courses_by_ID(course_id):
 @courses_blueprint.route('/courses', methods=['POST'])
 def add_course():
     data = request.json
-    print(data)
     if not data.get('max_students'):
         return jsonify({'error': 'Missing required fields'}), 400
     new_course = Course(
