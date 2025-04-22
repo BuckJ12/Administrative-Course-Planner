@@ -4,6 +4,7 @@ import ClickableTable from '@/Shared/components/ClickableTable';
 import courseService from '@/Services/courseService';
 import { courses } from '@/types/courseTypes';
 import { toast } from 'react-toastify';
+import CreateButton from '@/Shared/components/CreateButton';
 
 function CourseDash() {
   const [courses, setCourses] = useState<courses[]>([]);
@@ -57,7 +58,12 @@ function CourseDash() {
 
   return (
     <>
-      <h1>Courses</h1>
+      <h1 className='flex justify-center align-items-center'>
+        Courses
+        <CreateButton
+          handleClick={() => navigate('/courses/add')}
+        ></CreateButton>
+      </h1>
       <ClickableTable
         columns={columns}
         data={courses}

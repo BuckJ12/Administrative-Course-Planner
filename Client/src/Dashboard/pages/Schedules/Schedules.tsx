@@ -8,10 +8,6 @@ export default function Schedules() {
   const [isLoading, setIsLoading] = useState(true);
 
   const scheduleColumns = [
-    { title: 'Course', field: 'course_name' },
-    { title: 'Professor', field: 'professor' },
-    { title: 'Room', field: 'room' },
-    { title: 'Day', field: 'days' },
     {
       title: 'Time Slots',
       field: 'time_slots',
@@ -20,6 +16,10 @@ export default function Schedules() {
           ? rowData.time_slots.join(', ')
           : rowData.time_slots,
     },
+    { title: 'Day', field: 'days' },
+    { title: 'Course', field: 'course_name' },
+    { title: 'Professor', field: 'professor' },
+    { title: 'Room', field: 'room' },
   ];
 
   useEffect(() => {

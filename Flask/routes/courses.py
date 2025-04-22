@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import Course, Professor, Section, db
+from models import Course, Professor, Section, Room, db
 
 courses_blueprint = Blueprint('courses', __name__)
 
@@ -122,6 +122,15 @@ def add_course():
             else:
                 pass
 
+    rooms = data.get('rooms')
+    if rooms:
+        for room in rooms:
+            room_obj = Room.query.get(room)
+            if room_obj:
+                new_course.rooms.append(room_obj)
+            else:
+                pass
+
     db.session.commit()
     return jsonify({'message': 'Course added successfully'}), 201
 
@@ -180,6 +189,20 @@ def update_course_by_id(course_id):
         for prof in course.professors:
             if prof.id not in professors:
                 course.professors.remove(prof)
+    
+    rooms = data.get('rooms')
+    if rooms:
+        for room in rooms:
+            room_obj = Room.query.get(room)
+            if room_obj:
+                if room_obj not in course.rooms:
+                    course.rooms.append(room_obj)
+            else:
+                pass
+        for room in course.rooms:
+            if room.id not in rooms:
+                course.rooms.remove(room)
                 
+    # Commit the changes to the database
     db.session.commit()
     return jsonify({'message': 'Course updated successfully'})

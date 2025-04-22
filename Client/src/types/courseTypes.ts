@@ -19,6 +19,7 @@ export interface courseDTO {
   max_students: number;
   professors: number[];
   slots_needed: number;
+  rooms: number[];
 }
 
 export interface courseFullDTO {

@@ -11,6 +11,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Loading from '@/Shared/components/Loading';
+import { room } from '@/types/roomTypes';
+import RoomService from '@/Services/roomService';
 
 interface FormProps {
   name: string;
@@ -20,10 +22,12 @@ interface FormProps {
   slots_needed: number;
   max_students: number;
   professors: professor[];
+  rooms: room[];
 }
 
 function AddUpdateCourse() {
   const [professors, setProfessors] = useState<professor[]>([]);
+  const [rooms, setRooms] = useState<room[]>([]);
   const { id } = useParams();
   const parsedId = id ? parseInt(id, 10) : undefined;
   const isUpdateMode = parsedId !== undefined;
@@ -38,12 +42,15 @@ function AddUpdateCourse() {
     max_students: 0,
     professors: [],
     slots_needed: 0,
+    rooms: [],
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await ProfService.getAll();
-      setProfessors(data);
+      const profdata = await ProfService.getAll();
+      const roomData = await RoomService.getAll();
+      setRooms(roomData);
+      setProfessors(profdata);
     };
     fetchData();
   }, []);
@@ -56,6 +63,7 @@ function AddUpdateCourse() {
     max_students: Joi.number().required().min(1).label('Max Students'),
     professors: Joi.array().label('Professors'),
     slots_needed: Joi.number().min(1).label('Slots Needed'),
+    rooms: Joi.array().label('Rooms'),
   });
 
   useEffect(() => {
@@ -74,6 +82,7 @@ function AddUpdateCourse() {
       max_students: course.max_students,
       professors: course.professors,
       slots_needed: course.slots_needed,
+      rooms: course.rooms,
     });
   };
 
@@ -87,6 +96,7 @@ function AddUpdateCourse() {
         max_students: form.data.max_students,
         slots_needed: form.data.slots_needed,
         professors: form.data.professors.map((u) => u.id),
+        rooms: form.data.rooms.map((u) => u.id),
       };
       if (isUpdateMode) {
         await courseService.update(parsedId!, newCourse);
@@ -109,6 +119,16 @@ function AddUpdateCourse() {
   const handleProfDelete = (id: number) => {
     const Newprofs = form.data.professors.filter((u) => u.id !== id);
     form.handleDataChange('professors', Newprofs);
+  };
+
+  const handleRoomSelect = (room: room) => {
+    const Newrooms = [...form.data.rooms, room];
+    form.handleDataChange('rooms', Newrooms);
+  };
+
+  const handleRoomDelete = (id: number) => {
+    const Newrooms = form.data.rooms.filter((u) => u.id !== id);
+    form.handleDataChange('rooms', Newrooms);
   };
 
   const form = useForm<FormProps>({ fields, schema, doSubmit });
@@ -158,6 +178,18 @@ function AddUpdateCourse() {
         error={form.errors.professors}
         handleSelect={handleProfSelect}
         handleDelete={handleProfDelete}
+      />
+
+      <ReactiveSearchWithTable
+        tableHeaderName='Rooms'
+        id='rooms'
+        classStyle=''
+        selectedItems={form.data.rooms}
+        options={rooms}
+        selectionLabel='Select Rooms'
+        error={form.errors.rooms}
+        handleSelect={handleRoomSelect}
+        handleDelete={handleRoomDelete}
       />
 
       {form.renderButton(isUpdateMode ? 'Update' : 'Create')}

@@ -4,6 +4,7 @@ import ClickableTable from '@/Shared/components/ClickableTable';
 import roomService from '@/Services/roomService';
 import { room } from '@/types/roomTypes';
 import { toast } from 'react-toastify';
+import CreateButton from '@/Shared/components/CreateButton';
 
 function RoomDash() {
   const [room, setRoom] = useState<room[]>([]);
@@ -26,14 +27,29 @@ function RoomDash() {
     navigate(`/room/${row.id}`);
   };
 
-  const handleDeleteClick = () => {
-    toast('Feature Not Yet Implemented');
-    // TODO: implement click functionality
+  const deleteProfessor = async (id: number) => {
+    await roomService.delete(id);
+  };
+
+  const handleDeleteClick = async (r: room) => {
+    const originalRooms = [...room];
+    try {
+      setRoom(room.filter((room) => room.id !== r.id));
+      await deleteProfessor(r.id);
+      toast.success('Professor deleted successfully');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setRoom(originalRooms);
+      toast.error('Error deleting Professor, please try again');
+    }
   };
 
   return (
     <>
-      <h1>Rooms</h1>
+      <h1 className='flex justify-center align-items-center'>
+        Rooms
+        <CreateButton handleClick={() => navigate('/rooms/add')}></CreateButton>
+      </h1>
       <ClickableTable
         columns={columns}
         data={room}
